@@ -1,0 +1,28 @@
+@use 'variables.scss' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color-scheme: dark;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src:
+    url('../assets/fonts/inter.ttf') format('truetype'),
+    url('../assets/fonts/inter-italic.ttf') format('truetype');
+}
+
+body {
+  background-color: $dark;
+  color: $white;
+}
+
+.page {
+  // display: flex;
+  // flex-direction: column;
+  height: 100vh;
+  padding: 1rem;
+}

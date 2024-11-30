@@ -1,0 +1,9 @@
+@use 'variables.scss' as *;
+
+header {
+  //   border: 1px solid red;
+  padding: 1rem;
+  background-color: $black;
+  @include flex(row, flex-start, center);
+  gap: 1rem;
+}
