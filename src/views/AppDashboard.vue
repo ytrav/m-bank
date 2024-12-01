@@ -1,12 +1,25 @@
 <script lang="ts">
 import { useUserStore } from '@/stores/userStore';
 import { defineComponent } from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'AppDashboard',
-  data(): { userStore: ReturnType<typeof useUserStore> } {
+  data(): {
+    userStore: ReturnType<typeof useUserStore>;
+    isTransferUI: boolean;
+    transferData: {
+      receiver: string;
+      amount: number;
+    };
+  } {
     return {
       userStore: useUserStore(),
+      isTransferUI: false,
+      transferData: {
+        receiver: '',
+        amount: 0
+      }
     };
   },
   computed: {
@@ -15,7 +28,23 @@ export default defineComponent({
     }
   },
   methods: {
+    transferUI() {
+      this.isTransferUI = !this.isTransferUI;
+    },
+    sendTransfer() {
+      console.log('Send transfer');
+      console.log('Transfer data: ', this.userStore.user?.account_number, this.transferData.receiver, this.transferData.amount);
 
+      axios.post('http://localhost:3000/transfer', {
+        sender: this.userStore.user?.account_number,
+        receiver: this.transferData.receiver,
+        amount: this.transferData.amount
+      }).then((response) => {
+        console.log('Transfer response', response);
+      }).catch((error) => {
+        console.error('Transfer error', error);
+      })
+    }
   }
 })
 </script>
@@ -29,5 +58,16 @@ export default defineComponent({
     <p>
       Account number: {{ formattedAccountNumber }}
     </p>
+    <p>
+      Balance: {{ userStore.user?.balance }}
+    </p>
+    <button v-if="!isTransferUI" @click="transferUI">Send Transfer</button>
+    <div class="transfer" v-if="isTransferUI">
+      <form @submit.prevent="sendTransfer">
+        <input v-model="transferData.receiver" type="text" placeholder="Recipient account number" />
+        <input v-model="transferData.amount" type="number" placeholder="Amount" />
+        <button type="submit">Send</button>
+      </form>
+    </div>
   </div>
 </template>
