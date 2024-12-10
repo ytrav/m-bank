@@ -63,13 +63,15 @@ export const useUserStore = defineStore('user', {
       this.user.formatted_account_number = this.formatAccountNumber(this.user.account_number)
     },
     logout(): void {
-      axios.post('http://localhost:3000/logout', {}, { withCredentials: true }).then(() => {
-        this.user = null
-        this.loggedIn = false
-        this.stopInterval()
-        sessionStorage.removeItem('token')
-        router.replace({ path: '/' })
-      })
+      axios
+        .post('https://bank-api.maevetopia.fun/logout', {}, { withCredentials: true })
+        .then(() => {
+          this.user = null
+          this.loggedIn = false
+          this.stopInterval()
+          sessionStorage.removeItem('token')
+          router.replace({ path: '/' })
+        })
     },
     redirect(): void {
       if (protectedRoutes.includes(router.currentRoute.value.path.split('/')[1])) {
@@ -93,14 +95,14 @@ export const useUserStore = defineStore('user', {
     refreshData(): void {
       axios
         .post<{ accessToken: string }>(
-          'http://localhost:3000/refresh',
+          'https://bank-api.maevetopia.fun/refresh',
           {},
           { withCredentials: true },
         )
         .then((refreshResponse: AxiosResponse<{ accessToken: string }>) => {
           const newAccessToken = refreshResponse.data.accessToken
 
-          return axios.get<UserData>('http://localhost:3000/user', {
+          return axios.get<UserData>('https://bank-api.maevetopia.fun/user', {
             headers: {
               Authorization: `Bearer ${newAccessToken}`,
             },

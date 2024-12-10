@@ -40,7 +40,7 @@ export default {
   mounted() {
     axios
       .post(
-        'http://localhost:3000/refresh',
+        'https://bank-api.maevetopia.fun/refresh',
         {},
         {
           withCredentials: true,
@@ -50,7 +50,7 @@ export default {
         const accessToken = refreshResponse.data.accessToken
 
         axios
-          .get<UserData>('http://localhost:3000/user', {
+          .get<UserData>('https://bank-api.maevetopia.fun/user', {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },

@@ -127,7 +127,7 @@ export default defineComponent({
     register(): void {
       axios
         .post(
-          'http://localhost:3000/register',
+          'https://bank-api.maevetopia.fun/register',
           {
             f_name: this.registerData.f_name,
             l_name: this.registerData.l_name,

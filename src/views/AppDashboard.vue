@@ -77,7 +77,7 @@ export default defineComponent({
       )
 
       axios
-        .post('http://localhost:3000/transfer', {
+        .post('https://bank-api.maevetopia.fun/transfer', {
           sender: this.userStore.user?.account_number,
           receiver: this.transferData.receiver,
           amount: this.transferData.amount,

@@ -67,7 +67,7 @@ export default defineComponent({
       // console.log('Login', this.accountNum, this.password);
       axios
         .post(
-          'http://localhost:3000/login',
+          'https://bank-api.maevetopia.fun/login',
           {
             accountNum: this.rawAccountNumber,
             password: this.loginData.password,

@@ -68,7 +68,7 @@ export default defineComponent({
 
       receiver = receiver.replace(/[^0-9]/g, '')
       axios
-        .post('http://localhost:3000/transfer', {
+        .post('https://bank-api.maevetopia.fun/transfer', {
           sender: this.userStore.user?.account_number,
           receiver: receiver,
           amount: this.transferData.amount,
