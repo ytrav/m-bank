@@ -1,0 +1,9 @@
+@use 'variables.scss' as *;
+
+footer {
+  width: 100%;
+  background-color: $blue;
+  position: absolute;
+  //   top: calc(100% - 170px);
+  bottom: 0;
+}

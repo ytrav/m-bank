@@ -1,9 +1,126 @@
 @use 'variables.scss' as *;
 
 header {
-  //   border: 1px solid red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
   padding: 1rem;
   background-color: $black;
   @include flex(row, flex-start, center);
   gap: 1rem;
+  width: 100%;
+  border-bottom: 2px solid $dblue;
+  a {
+    text-decoration: none;
+    color: $white;
+  }
+  .logged-out {
+    @include flex(row, flex-end, center);
+    flex-grow: 1;
+    // gap: 1rem;
+    a {
+      color: $white;
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      &:hover {
+        background-color: rgba($color: $white, $alpha: 0.2);
+      }
+      &:last-child {
+        background-color: $dblue;
+        font-weight: 600;
+        color: $white;
+        margin-left: 0.5rem;
+        &:hover {
+          background-color: rgba($color: $dblue, $alpha: 0.8);
+        }
+      }
+    }
+  }
+  .logged-in {
+    @extend .logged-out;
+    .user {
+      background-color: transparent;
+      border: 2px solid $blue;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      position: relative;
+      .user-menu {
+        cursor: default;
+        position: absolute;
+        background-color: $dblue;
+        width: 250px;
+        // height: 200px;
+        border-radius: 15px;
+        padding: 1rem;
+        top: 100%;
+        right: 0;
+        z-index: 2;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        .profile {
+          @include flex(row, space-between, center);
+          gap: 1rem;
+          border-bottom: 1px solid $blue;
+          margin: 0 -1rem 0 -1rem;
+          padding: 0 1rem 0.5rem 1rem;
+          .avatar {
+            @include flex(row, center, center);
+            background-color: $blue;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            flex-grow: 0;
+            flex-shrink: 0;
+          }
+          .info {
+            @include flex(column, flex-start, flex-start);
+            gap: 0.5rem;
+            flex-grow: 1;
+            h5 {
+              font-size: 1rem;
+              font-weight: 500;
+              color: $white;
+            }
+            p {
+              font-size: 0.9rem;
+              color: rgba($color: $white, $alpha: 0.7);
+            }
+          }
+        }
+        .options {
+          @include flex(column, flex-start, stretch);
+          margin: 0 -1rem 0 -1rem;
+          padding-top: 0.5rem;
+          .option {
+            @include flex(row, flex-start, center);
+            gap: 1rem;
+            background-color: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            cursor: pointer;
+            &:hover {
+              background-color: rgba($color: $white, $alpha: 0.2);
+            }
+            .icon-container {
+              .icon {
+                @include flex(row, center, center);
+                color: $white;
+                // width: 40px;
+              }
+            }
+            span {
+              font-size: 0.9rem;
+              color: $white;
+              text-align: left;
+            }
+          }
+        }
+      }
+    }
+  }
 }

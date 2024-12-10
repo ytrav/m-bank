@@ -1,85 +1,173 @@
 <script lang="ts">
-import axios from 'axios';
-import { useUserStore } from '@/stores/userStore';
-import { defineComponent } from 'vue';
+import axios from 'axios'
+import { useUserStore } from '@/stores/userStore'
+import { defineComponent } from 'vue'
+
+import AppWarning from '@/components/AppWarning.vue'
+
+export interface LoginData {
+  accountNum: string
+  password: string
+  remember: boolean
+}
 
 export default defineComponent({
-  data() {
+  components: {
+    AppWarning,
+  },
+  data(): {
+    error: string
+    loginData: LoginData
+    userStore: ReturnType<typeof useUserStore>
+    loginFields: Array<{
+      label: string
+      type: string
+      name: string
+      model: keyof LoginData
+      length: string
+    }>
+  } {
     return {
-      accountNum: '',
-      password: '',
+      error: '',
+      loginData: {
+        accountNum: '',
+        password: '',
+        remember: false,
+      },
       userStore: useUserStore(),
-    };
+      loginFields: [
+        {
+          label: 'Your mBank account number',
+          type: 'text',
+          name: 'accountNum',
+          model: 'accountNum',
+          length: '12',
+        },
+        {
+          label: 'Password',
+          type: 'password',
+          name: 'password',
+          model: 'password',
+          length: '255',
+        },
+      ],
+    }
   },
   computed: {
     rawAccountNumber(): string {
-      let rawNum = this.accountNum.replace(/-/g, '');
+      let rawNum = this.loginData.accountNum.replace(/-/g, '')
       if (rawNum.startsWith('12')) {
-        rawNum = rawNum.slice(2);
+        rawNum = rawNum.slice(2)
       }
-      return rawNum;
-    }
+      return rawNum
+    },
   },
   methods: {
-    login() {
+    login(): void {
       // console.log('Login', this.accountNum, this.password);
-      axios.post('http://localhost:3000/login', {
-        accountNum: this.rawAccountNumber,
-        password: this.password,
-      }).then((response) => {
-        console.log('Login response', response);
-        this.userStore.setLoggedIn(true);
-        // console.log(response.data.userData);
-
-        this.userStore.setUserData(response.data.userData);
-        this.$router.push('/dashboard');
-      }).catch((error) => {
-        console.error('Login error', error);
-      });
+      axios
+        .post(
+          'http://localhost:3000/login',
+          {
+            accountNum: this.rawAccountNumber,
+            password: this.loginData.password,
+            remember: this.loginData.remember,
+          },
+          {
+            withCredentials: true,
+          },
+        )
+        .then((response) => {
+          console.log('Login response', response)
+          this.userStore.setLoggedIn(true)
+          // console.log(response.data.userData);
+          this.userStore.setUserData(response.data.user)
+          // sessionStorage.setItem('token', response.data.token)
+          this.$router.replace('/dashboard')
+        })
+        .catch((error) => {
+          console.error('Login error', error)
+          this.error = error.response?.data?.error || 'Unexpected error occurred'
+        })
     },
-    handleFocus() {
+    handleFocus(): void {
       // Ensure "12-" is always there when the input is focused
-      if (!this.accountNum.startsWith('12-')) {
-        this.accountNum = '12-';
+      if (!this.loginData.accountNum.startsWith('12-')) {
+        this.loginData.accountNum = '12-'
       }
     },
   },
   watch: {
-    accountNum(newVal) {
+    'loginData.accountNum'(newVal) {
       // Allow only numbers and hyphens, ensure the input always starts with "12-"
-      newVal = newVal.replace(/[^0-9-]/g, '');
+      newVal = newVal.replace(/[^0-9-]/g, '')
       if (!newVal.startsWith('12-')) {
-        newVal = '12-' + newVal.replace(/^12-?/, '');
+        newVal = '12-' + newVal.replace(/^12-?/, '')
       }
 
       // Add hyphens automatically for the first part (after "12-")
-      const rawNum = newVal.replace(/-/g, '').slice(2); // Remove hyphens and "12" prefix
-      let formattedNum = '12-';
+      const rawNum = newVal.replace(/-/g, '').slice(2) // Remove hyphens and "12" prefix
+      let formattedNum = '12-'
       if (rawNum.length > 4) {
-        formattedNum += `${rawNum.slice(0, 4)}-${rawNum.slice(4, 8)}`;
+        formattedNum += `${rawNum.slice(0, 4)}-${rawNum.slice(4, 8)}`
       } else if (rawNum.length > 0) {
-        formattedNum += rawNum;
+        formattedNum += rawNum
       }
 
       // Only permit the hyphen after "12-XXXX" and not beyond
       if (rawNum.length === 4 && newVal.length > formattedNum.length) {
-        formattedNum += '-';
+        formattedNum += '-'
       }
 
-      this.accountNum = formattedNum;
+      this.loginData.accountNum = formattedNum
     },
   },
-});
+})
 </script>
 
 <template>
   <div class="login">
-    <span>Login</span>
-
+    <h2>Welcome back!</h2>
     <form @submit.prevent="login">
-      <input type="text" maxlength="12" v-model="accountNum" @focus="handleFocus" placeholder="12-XXXX-XXXX" />
-      <input type="password" v-model="password" placeholder="Password" />
-      <button type="submit">Login</button>
+      <AppWarning
+        class="error"
+        v-if="error"
+        :warning="{
+          type: 'other',
+          message: error,
+          outline: false,
+        }"
+      />
+      <div v-for="(field, index) in loginFields" :key="index" class="input-container">
+        <input
+          :id="field.name"
+          v-model="loginData[field.model]"
+          :type="field.type"
+          :maxlength="field.length"
+          @focus="index === 0 ? handleFocus() : null"
+          :placeholder="field.label"
+        />
+        <label :for="field.name"> {{ field.label }} </label>
+      </div>
+      <div class="remember">
+        <input v-model="loginData.remember" type="checkbox" name="remember" id="remember" />
+        <label for="remember">Remember me</label>
+      </div>
+      <button
+        v-wave="{
+          duration: 0.2,
+          color: 'currentColor',
+          initialOpacity: 0.2,
+          easing: 'ease-out',
+        }"
+        type="submit"
+      >
+        Login
+      </button>
+      <caption>
+        Don't have an account?
+        <RouterLink to="/register">Become a member</RouterLink>
+      </caption>
     </form>
   </div>
 </template>

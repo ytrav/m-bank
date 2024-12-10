@@ -4,8 +4,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Geist', sans-serif;
+  font-weight: 500;
   color-scheme: dark;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 @font-face {
@@ -15,14 +17,119 @@
     url('../assets/fonts/inter-italic.ttf') format('truetype');
 }
 
+@font-face {
+  font-family: 'Geist';
+  src: url('../assets/fonts/geist-variable.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'OCR';
+  src: url('../assets/fonts/ocr-a.ttf') format('truetype');
+}
+
 body {
-  background-color: $dark;
+  background-color: $black;
   color: $white;
 }
 
+#app {
+  @include flex(column, flex-start, center);
+}
+
+.router-wrapper {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @include flex(column, flex-start, center);
+  overflow-y: auto;
+
+  &.locked {
+    // pointer-events: none;
+    overflow-y: hidden;
+  }
+}
+
 .page {
-  // display: flex;
-  // flex-direction: column;
-  height: 100vh;
   padding: 1rem;
+  @include flex(column, flex-start, stretch);
+  max-width: 900px;
+  width: calc(100% - 4rem);
+  margin: 4rem 0;
+  background-color: $dark;
+  border-radius: 15px;
+  // position: absolute;
+}
+
+.dashboard-router {
+  .wrapper {
+    width: 300px;
+    .top-bar {
+      button {
+        align-self: flex-start;
+      }
+    }
+  }
+}
+
+// transitions
+
+.route-enter-active,
+.route-leave-active {
+  transition:
+    opacity 0.3s ease-out,
+    transform 0.3s ease-out;
+  position: absolute;
+}
+
+.route-enter-from {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.route-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.popup-enter-active,
+.popup-leave-active {
+  transition: opacity 0.2s ease-out;
+  .wrapper {
+    transition:
+      opacity 0.2s ease-out,
+      transform 0.2s ease-out;
+  }
+}
+
+.popup-enter-from {
+  opacity: 0;
+  .wrapper {
+    transform: scale(0.9);
+  }
+}
+
+.popup-leave-to {
+  opacity: 0;
+  .wrapper {
+    transform: translateY(20px);
+  }
+}
+
+.user-popup-enter-active,
+.user-popup-leave-active {
+  transition:
+    opacity 0.15s ease-out,
+    transform 0.15s ease-out;
+}
+
+.user-popup-enter-from {
+  opacity: 0;
+  transform: translateY(-20px) scale(0.9);
+}
+
+.user-popup-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }

@@ -1,0 +1,10 @@
+@use 'variables.scss' as *;
+
+.home {
+  caption {
+    // font-size: 0.8rem;
+    opacity: 0.9;
+    display: block;
+    text-align: right;
+  }
+}

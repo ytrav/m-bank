@@ -1,0 +1,25 @@
+@use 'variables.scss' as *;
+
+.warning {
+  @include flex(row, flex-start, center);
+  border: 1px solid $dblue;
+  border-radius: 15px;
+  padding: 1rem;
+  gap: 0.5rem;
+  color: rgba($color: $white, $alpha: 0.7);
+  .icon {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+  strong {
+    color: $white;
+  }
+}
+
+.error {
+  background-color: rgba($color: #ff0000, $alpha: 0.1);
+  border: 1px solid rgba($color: #ff0000, $alpha: 0.5);
+  color: $white;
+  font-size: 0.9rem;
+  padding: 15px;
+}
