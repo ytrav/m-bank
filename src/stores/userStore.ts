@@ -12,6 +12,7 @@ export interface User {
   formatted_account_number: string
   gender: Gender
   balance: string
+  balance_number: number
   card: Card
   transactions: Transaction[]
 }
@@ -72,6 +73,8 @@ export const useUserStore = defineStore('user', {
     },
     setUserData(data: User): void {
       this.user = data
+      this.user.balance_number = parseFloat(data.balance)
+      this.user.formatted_account_number = this.formatAccountNumber(data.account_number)
       this.user.card.formatted_expiry_date_string = this.formatExpiryDate<'string'>(
         this.user.card.expiry_date,
         'string',

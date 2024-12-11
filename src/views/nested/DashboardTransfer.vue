@@ -27,7 +27,7 @@ export default defineComponent({
     error: string
     transferData: {
       receiver: string
-      amount: number
+      amount: string
     }
     userStore: ReturnType<typeof useUserStore>
     // router: typeof router
@@ -39,7 +39,7 @@ export default defineComponent({
       error: '',
       transferData: {
         receiver: '',
-        amount: 0.0,
+        amount: '0.00',
       },
       userStore: useUserStore(),
       // router,
@@ -56,7 +56,10 @@ export default defineComponent({
       }
     },
     sendTransfer() {
-      if (this.userStore.user?.balance && this.transferData.amount > this.userStore.user?.balance) {
+      if (
+        this.userStore.user?.balance_number &&
+        parseFloat(this.transferData.amount) > this.userStore.user?.balance_number
+      ) {
         this.error = 'Insufficient funds for the transaction'
         return
       }
@@ -113,7 +116,7 @@ export default defineComponent({
 
       // Ensure there's only two decimal places
       if (parts.length > 1) {
-        this.transferData.amount = parseFloat(parts[0] + '.' + parts[1].slice(0, 2))
+        this.transferData.amount = parts[0] + '.' + parts[1].slice(0, 2)
       }
     },
   },
