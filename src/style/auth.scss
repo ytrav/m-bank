@@ -65,6 +65,63 @@
         border-color: $blue;
       }
     }
+    .remember {
+      @include flex(row, flex-start, center);
+      height: 25px;
+      width: fit-content;
+      // padding: 15px 30px;
+      // display: block;
+      position: relative;
+      cursor: pointer;
+      font-size: 0.8rem;
+      // padding-left: 30px;
+      @include no-select;
+      .label {
+        padding: 10px 15px 10px 30px;
+        border-radius: 50px;
+        // margin-left: -1rem;
+        z-index: 1;
+      }
+      &:hover input ~ .checkmark {
+        background-color: rgba($color: $dblue, $alpha: 0.7);
+      }
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+        &:checked ~ .checkmark {
+          background-color: $blue;
+          &::after {
+            display: block;
+          }
+        }
+      }
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: $dblue;
+        border-radius: 5px;
+        &::after {
+          content: '';
+          position: absolute;
+          display: none;
+          left: 9px;
+          top: 5px;
+          width: 5px;
+          height: 10px;
+          border: solid white;
+          border-width: 0 3px 3px 0;
+          -webkit-transform: rotate(45deg);
+          -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
+      }
+    }
     button {
       background-color: $blue;
       color: white;

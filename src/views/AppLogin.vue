@@ -32,7 +32,7 @@ export default defineComponent({
       loginData: {
         accountNum: '',
         password: '',
-        remember: false,
+        remember: true,
       },
       userStore: useUserStore(),
       loginFields: [
@@ -149,10 +149,21 @@ export default defineComponent({
         />
         <label :for="field.name"> {{ field.label }} </label>
       </div>
-      <div class="remember">
+      <label for="remember" class="remember"
+        ><span
+          v-wave="{
+            duration: 0.2,
+            color: 'currentColor',
+            initialOpacity: 0.2,
+            easing: 'ease-out',
+            stopPropagation: true,
+          }"
+          class="label"
+          >Remember me</span
+        >
         <input v-model="loginData.remember" type="checkbox" name="remember" id="remember" />
-        <label for="remember">Remember me</label>
-      </div>
+        <span class="checkmark"></span>
+      </label>
       <button
         v-wave="{
           duration: 0.2,

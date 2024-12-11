@@ -96,7 +96,7 @@ export default defineComponent({
 <template>
   <div class="dashboard" v-if="userStore.user">
     <div class="top-row">
-      <h1>₣ {{ userStore.user.formatted_balance }}</h1>
+      <h1>₣ {{ userStore.user.balance }}</h1>
       <RouterLink
         to="/dashboard/transfer"
         v-wave="{ duration: 0.15, color: 'currentColor', initialOpacity: 0.2, easing: 'ease-out' }"
@@ -120,10 +120,10 @@ export default defineComponent({
     </h2>
     <!-- <p>Account number: {{ formattedAccountNumber }}</p>
     <p>Balance: {{ userStore.user?.balance }}</p> -->
-    <p v-if="userStore.user?.card.number">
+    <!-- <p v-if="userStore.user?.card.number">
       Card details: 44{{ userStore.user?.card.number.slice(0, 2) }}
       {{ userStore.user?.card.number.slice(2, 6) }} ({{ userStore.user?.card.expiry_date }})
-    </p>
+    </p> -->
     <DashboardTransactions />
     <RouterView
       :closeIcon="icons.mdiClose"

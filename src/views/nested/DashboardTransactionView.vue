@@ -108,7 +108,7 @@ export default defineComponent({
           }"
         >
           <template v-if="transaction.personal_type === 'subtraction'">-</template>₣{{
-            userStore.formatAmount(transaction.amount)
+            transaction.amount
           }}
         </span>
         <div class="info">

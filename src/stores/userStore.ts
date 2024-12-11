@@ -11,8 +11,7 @@ export interface User {
   account_number: string
   formatted_account_number: string
   gender: Gender
-  balance: number
-  formatted_balance: string
+  balance: string
   card: Card
   transactions: Transaction[]
 }
@@ -24,11 +23,13 @@ export interface UserData extends AxiosResponse {
 
 export interface Card {
   expiry_date: string
+  formatted_expiry_date: Date
+  formatted_expiry_date_string: string
   number: string
 }
 
 export interface Transaction {
-  amount: number
+  amount: string
   description: string
   id: number
   receiver_account_number: string
@@ -43,7 +44,19 @@ export interface UserStore {
   refreshInterval: ReturnType<typeof setInterval> | null
 }
 
-// export type ProtectedRoutes = string[]
+type FormatExpiryDateArgs =
+  | {
+      type: 'string'
+      date: string | null
+    }
+  | {
+      type: 'date'
+      date: string | null
+    }
+
+type FormatExpiryDateReturnType<T extends FormatExpiryDateArgs['type']> = T extends 'date'
+  ? Date
+  : string
 
 export const protectedRoutes: string[] = ['dashboard', 'settings', 'account']
 
@@ -59,8 +72,10 @@ export const useUserStore = defineStore('user', {
     },
     setUserData(data: User): void {
       this.user = data
-      this.user.formatted_balance = this.formatAmount(this.user.balance)
-      this.user.formatted_account_number = this.formatAccountNumber(this.user.account_number)
+      this.user.card.formatted_expiry_date_string = this.formatExpiryDate<'string'>(
+        this.user.card.expiry_date,
+        'string',
+      )
     },
     logout(): void {
       axios
@@ -86,11 +101,28 @@ export const useUserStore = defineStore('user', {
         clearInterval(this.refreshInterval)
       }
     },
-    formatAmount(amount: number): string {
-      return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-    },
     formatAccountNumber(accountNumber: string): string {
       return `12-${accountNumber.toString().slice(0, 4)}-${accountNumber.toString().slice(4, 8)}`
+    },
+    formatExpiryDate<T extends FormatExpiryDateArgs['type']>(
+      date: string | null,
+      type: 'string' | 'date',
+    ): FormatExpiryDateReturnType<T> {
+      if (date) {
+        if (type === 'date') {
+          return new Date(date) as FormatExpiryDateReturnType<T>
+        } else {
+          let date_obj: Date
+          if (this.user?.card?.formatted_expiry_date instanceof Date) {
+            date_obj = this.user.card.formatted_expiry_date
+          } else {
+            date_obj = new Date(date)
+          }
+          return `${date_obj.getMonth() + 1}/${date_obj.getFullYear()}` as FormatExpiryDateReturnType<T>
+        }
+      } else {
+        return '' as FormatExpiryDateReturnType<T>
+      }
     },
     refreshData(): void {
       axios

@@ -89,7 +89,7 @@ export default defineComponent({
       </div>
       <span class="amount" :class="{ addition: getType(transaction.personal_type) }"
         ><template v-if="transaction.personal_type === 'addition'">+</template>
-        <template v-else>-</template>₣{{ userStore.formatAmount(transaction.amount) }}</span
+        <template v-else>-</template>₣{{ transaction.amount }}</span
       >
     </RouterLink>
     <span
