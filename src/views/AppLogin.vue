@@ -32,7 +32,7 @@ export default defineComponent({
       loginData: {
         accountNum: '',
         password: '',
-        remember: true,
+        remember: false,
       },
       userStore: useUserStore(),
       loginFields: [
@@ -129,15 +129,17 @@ export default defineComponent({
   <div class="login">
     <h2>Welcome back!</h2>
     <form @submit.prevent="login">
-      <AppWarning
-        class="error"
-        v-if="error"
-        :warning="{
-          type: 'other',
-          message: error,
-          outline: false,
-        }"
-      />
+      <Transition name="warning">
+        <AppWarning
+          class="error"
+          v-if="error"
+          :warning="{
+            type: 'other',
+            message: error,
+            outline: false,
+          }"
+        />
+      </Transition>
       <div v-for="(field, index) in loginFields" :key="index" class="input-container">
         <input
           :id="field.name"

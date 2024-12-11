@@ -111,18 +111,8 @@ export default defineComponent({
       ],
     }
   },
-  computed: {
-    passwordCheck(): boolean {
-      if (
-        /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+\[\]{}|;:'",.<>?/`~])[A-Za-z\d!@#$%^&*()\-_=+$begin:math:display$$end:math:display${}|;:'",.<>?/`~]{8,}$/.test(
-          this.registerData.password,
-        )
-      ) {
-        return true
-      }
-      return false
-    },
-  },
+  // computed: {
+  // },
   methods: {
     register(): void {
       axios
@@ -153,6 +143,29 @@ export default defineComponent({
     },
   },
   watch: {
+    'registerData.password': function (password) {
+      const requirements: string[] = []
+      if (password.length < 8) {
+        requirements.push('- Be at least 8 characters')
+      }
+      if (!/[a-z]/.test(password)) {
+        requirements.push('- Includes at least one lowercase letter')
+      }
+      if (!/[A-Z]/.test(password)) {
+        requirements.push('- Includes at least one uppercase letter')
+      }
+      if (!/[0-9]/.test(password)) {
+        requirements.push('- Includes at least one number')
+      }
+      // doesn't include illegal characters and spaces except for usual special characters
+      if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(password)) {
+        requirements.push('Does not include unsupported characters')
+      }
+      this.error =
+        requirements.length > 0
+          ? `The password you choose must meet the following requirements:<br><br>${requirements.join(',<br>')}`
+          : ''
+    },
     'registerData.f_name': function (val) {
       this.registerData.f_name = val.charAt(0).toUpperCase() + val.slice(1)
     },
@@ -166,16 +179,18 @@ export default defineComponent({
 <template>
   <div class="register">
     <h2>Become an Account holder</h2>
-    <AppWarning
-      class="error"
-      v-if="error"
-      :warning="{
-        type: 'other',
-        message: error,
-        outline: false,
-      }"
-    />
-    <span> {{ passwordCheck }} </span>
+    <Transition name="warning">
+      <AppWarning
+        class="error"
+        v-if="error"
+        :warning="{
+          type: 'other',
+          message: error,
+          outline: false,
+        }"
+      />
+    </Transition>
+    <!-- <span> {{ passwordCheck }} </span> -->
     <form @submit.prevent="register">
       <div v-for="(field, index) in registerFields" :key="index" class="input-container">
         <input type="text" autocomplete="username" style="display: none" />
@@ -198,10 +213,21 @@ export default defineComponent({
           {{ option.text }}
         </option>
       </select>
-      <div class="remember">
+      <label style="margin-top: 10px" for="remember" class="remember"
+        ><span
+          v-wave="{
+            duration: 0.2,
+            color: 'currentColor',
+            initialOpacity: 0.2,
+            easing: 'ease-out',
+            stopPropagation: true,
+          }"
+          class="label"
+          >Remember me</span
+        >
         <input v-model="registerData.remember" type="checkbox" name="remember" id="remember" />
-        <label for="remember">Remember me</label>
-      </div>
+        <span class="checkmark"></span>
+      </label>
       <button
         v-wave="{
           duration: 0.2,
