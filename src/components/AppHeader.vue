@@ -38,7 +38,7 @@ export default defineComponent({
     SvgIcon,
   },
   data(): {
-    userMenuOpen: boolean
+    // userMenuOpen: boolean
     menuFocused: boolean
     userStore: ReturnType<typeof useUserStore>
     links: Array<{
@@ -49,7 +49,7 @@ export default defineComponent({
     icons: Icons
   } {
     return {
-      userMenuOpen: false,
+      // userMenuOpen: false,
       menuFocused: false,
       userStore: useUserStore(),
       links: [
@@ -95,12 +95,12 @@ export default defineComponent({
   },
   methods: {
     logout(): void {
-      this.userMenuOpen = false
+      this.userStore.userMenuOpen = false
       this.userStore.logout()
     },
     toggleUserMenu(): void {
-      this.userMenuOpen = true
-      if (this.userMenuOpen && this.$refs.userMenuButton) {
+      this.userStore.setUserMenu(true)
+      if (this.userStore.userMenuOpen && this.$refs.userMenuButton) {
         // Focus on the button when the menu is opened
         ;(this.$refs.userMenuButton as HTMLElement).focus()
       }
@@ -111,8 +111,8 @@ export default defineComponent({
       const menu = this.$refs.userMenu as HTMLElement
 
       // Close if the click target is outside the button and menu
-      if (this.userMenuOpen && !button?.contains(target) && !menu?.contains(target)) {
-        this.userMenuOpen = false
+      if (this.userStore.userMenuOpen && !button?.contains(target) && !menu?.contains(target)) {
+        this.userStore.setUserMenu(false)
       }
     },
   },
@@ -153,7 +153,7 @@ export default defineComponent({
         @click="toggleUserMenu"
         ref="userMenuButton"
         class="user"
-        @keydown.esc="userMenuOpen = false"
+        @keydown.esc="userStore.setUserMenu(false)"
         v-wave="{
           duration: 0.2,
           color: 'currentColor',
@@ -164,7 +164,7 @@ export default defineComponent({
       >
         {{ userStore.user?.f_name.slice(0, 1) }}{{ userStore.user?.l_name.slice(0, 1) }}
         <Transition name="user-popup">
-          <div class="user-menu" ref="userMenu" tabindex="-1" v-if="userMenuOpen">
+          <div class="user-menu" ref="userMenu" tabindex="-1" v-if="userStore.userMenuOpen">
             <div class="profile">
               <div class="avatar">
                 {{ userStore.user?.f_name.slice(0, 1) }}{{ userStore.user?.l_name.slice(0, 1) }}
@@ -188,7 +188,7 @@ export default defineComponent({
                 :key="index"
                 class="option"
                 @click="option.action"
-                @mouseup="userMenuOpen = false"
+                @mouseup="userStore.setUserMenu(false)"
                 :to="option.link"
               >
                 <div class="icon-container">

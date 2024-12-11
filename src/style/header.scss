@@ -75,6 +75,7 @@ header {
             height: 40px;
             flex-grow: 0;
             flex-shrink: 0;
+            color: $white;
           }
           .info {
             @include flex(column, flex-start, flex-start);

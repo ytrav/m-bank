@@ -92,7 +92,7 @@ export default {
 
 <template>
   <AppHeader />
-  <div class="router-wrapper" :class="{ locked: isPopup }">
+  <div class="router-wrapper" @scroll="userStore.setUserMenu(false)" :class="{ locked: isPopup }">
     <RouterView tabindex="0" @keydown.esc="closePopup" class="page" v-slot="{ Component }">
       <Transition name="route">
         <Component :is="Component" />

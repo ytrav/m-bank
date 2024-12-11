@@ -15,6 +15,8 @@ import './style/auth.scss'
 import './style/dashboard.scss'
 import './style/transaction.scss'
 
+import './style/viewports.scss'
+
 import App from './App.vue'
 import router from './router'
 

@@ -43,6 +43,7 @@ export interface UserStore {
   loggedIn: boolean
   user: User | null
   refreshInterval: ReturnType<typeof setInterval> | null
+  userMenuOpen: boolean
 }
 
 type FormatExpiryDateArgs =
@@ -66,6 +67,7 @@ export const useUserStore = defineStore('user', {
     loggedIn: false,
     user: null,
     refreshInterval: null,
+    userMenuOpen: false,
   }),
   actions: {
     setLoggedIn(loggedIn: boolean): void {
@@ -150,6 +152,9 @@ export const useUserStore = defineStore('user', {
           console.error('Error refreshing data:', error.response?.data || error.message)
           this.logout()
         })
+    },
+    setUserMenu(value: boolean): void {
+      this.userMenuOpen = value
     },
   },
 })

@@ -65,6 +65,7 @@ body {
 .dashboard-router {
   .wrapper {
     width: 300px;
+    @include flex(column, flex-start, stretch);
     .top-bar {
       button {
         align-self: flex-start;

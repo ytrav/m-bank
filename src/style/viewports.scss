@@ -1,0 +1,26 @@
+@use 'variables.scss' as *;
+
+@media screen and (max-width: 500px) {
+  .transactions {
+    .transaction {
+      caption {
+        display: none;
+      }
+    }
+  }
+  .page {
+    width: calc(100% - 1rem);
+  }
+  .login,
+  .register {
+    width: calc(100% - 2rem);
+  }
+  .dashboard-router {
+    .wrapper {
+      width: 100vw;
+      height: 100vh;
+      border-radius: 0;
+      gap: 3rem;
+    }
+  }
+}
