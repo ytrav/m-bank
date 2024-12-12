@@ -13,6 +13,7 @@ import Dashboard from '@/views/AppDashboard.vue'
 // children routes
 import Transfer from '@/views/nested/DashboardTransfer.vue'
 import TransactionView from '@/views/nested/DashboardTransactionView.vue'
+import IssueCard from '@/views/nested/DashboardIssueCard.vue'
 import Welcome from '@/views/nested/DashboardWelcome.vue'
 
 import { useUserStore } from '@/stores/userStore'
@@ -77,6 +78,11 @@ const routes: RouteRecordRaw[] = [
         path: '/dashboard/transaction/:id',
         name: 'transaction',
         component: TransactionView,
+      },
+      {
+        path: '/dashboard/issue-card',
+        name: 'issue-card',
+        component: IssueCard,
       },
       {
         path: '/dashboard/welcome',

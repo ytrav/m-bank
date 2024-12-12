@@ -43,12 +43,16 @@
           color: transparent;
           font-size: 0.8rem;
         }
+        &.currency-input::placeholder {
+          color: rgba($color: $white, $alpha: 0.5);
+        }
         &:focus {
           outline: none;
           border-color: $blue;
         }
         &:focus + label,
-        &:not(:placeholder-shown) + label {
+        &:not(:placeholder-shown) + label,
+        &.currency-input + label {
           transform: translateY(-15px);
           font-size: 0.7rem;
           color: $blue;

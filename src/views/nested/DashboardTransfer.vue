@@ -8,9 +8,6 @@ import SvgIcon from '@jamescoyle/vue-icon'
 
 import AppWarning from '@/components/AppWarning.vue'
 
-// import { mdiClose } from '@mdi/js'
-// import router from '@/router'
-
 export default defineComponent({
   name: 'DashboardTransfer',
   components: {
@@ -39,7 +36,7 @@ export default defineComponent({
       error: '',
       transferData: {
         receiver: '',
-        amount: '0.00',
+        amount: '',
       },
       userStore: useUserStore(),
       // router,
@@ -168,7 +165,7 @@ export default defineComponent({
             id="amount"
             v-model="transferData.amount"
             type="number"
-            placeholder="Amount"
+            placeholder="0,00"
             step="0.01"
             min="1"
             required
