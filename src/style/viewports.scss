@@ -22,9 +22,24 @@
       height: 100vh;
       // justify-self: flex-end;
       border-radius: 15px 15px 0 0;
+      justify-content: flex-start;
       gap: 3rem;
       .text-wrapper {
         max-height: 100% !important;
+      }
+    }
+    &.welcome-message {
+      .body {
+        flex: 1;
+      }
+      .bottom {
+        flex: 0;
+      }
+    }
+    &.card-issue {
+      .wrapper .body {
+        justify-content: space-between;
+        flex: 2;
       }
     }
   }

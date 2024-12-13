@@ -67,11 +67,12 @@ body {
   opacity: 1;
   .wrapper {
     .body {
-      overflow-y: auto;
+      // overflow-y: auto;
+      max-height: calc(100% - 2rem);
     }
     width: 300px;
     height: 400px;
-    @include flex(column, flex-start, stretch);
+    @include flex(column, space-between, stretch);
     .top-bar {
       button {
         align-self: flex-start;

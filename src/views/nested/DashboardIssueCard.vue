@@ -111,7 +111,7 @@ export default defineComponent({
             }"
           />
           <p>
-            As a Maevetopian Citizen and an mvBank customer, you are entitled to a free debit card
+            As a Maevetopian Citizen and a customer of mvBank, you are entitled to a free debit card
             that you will be able to use for payments for services in the network, as we continue to
             set up and expand it.
           </p>

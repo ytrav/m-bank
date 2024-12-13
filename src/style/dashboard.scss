@@ -261,7 +261,7 @@
     .body {
       @include flex(column, flex-start, stretch);
       gap: 1rem;
-      margin-top: 1rem;
+      // margin-top: 1rem;
       color: rgba($color: $white, $alpha: 0.9);
       .uname,
       .acc {
@@ -283,7 +283,7 @@
         padding: 10px;
         border: none;
         cursor: pointer;
-        margin-top: 10px;
+        // margin-top: 10px;
         border-radius: 10px;
       }
     }

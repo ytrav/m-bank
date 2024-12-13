@@ -155,7 +155,7 @@ export default defineComponent({
           outline: false,
         }"
       />
-      <form @submit.prevent="sendTransfer">
+      <form class="body" @submit.prevent="sendTransfer">
         <div class="input-container">
           <input
             id="receiver"
@@ -181,17 +181,19 @@ export default defineComponent({
           />
           <label for="amount">Amount</label>
         </div>
-        <button
-          v-wave="{
-            duration: 0.2,
-            color: 'currentColor',
-            initialOpacity: 0.2,
-            easing: 'ease-out',
-          }"
-          type="submit"
-        >
-          Send Transfer
-        </button>
+        <div class="bottom">
+          <button
+            v-wave="{
+              duration: 0.2,
+              color: 'currentColor',
+              initialOpacity: 0.2,
+              easing: 'ease-out',
+            }"
+            type="submit"
+          >
+            Send Transfer
+          </button>
+        </div>
       </form>
     </div>
   </div>
