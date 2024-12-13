@@ -1,6 +1,10 @@
-# m-bank
+# mvBank Front-End Client
 
-This template should help get you started developing with Vue 3 in Vite.
+### Web client for the banking and transaction system I developed using Vue and TypeScript in two weeks
+
+Available at [bank.maevetopia.fun](https://bank.maevetopia.fun)
+
+[>ExpressJS backend](https://github/ytrav/m-bank-db)
 
 ## Recommended IDE Setup
 
