@@ -27,7 +27,7 @@
     padding-left: 5px;
     margin-left: -5px;
     mask-image: linear-gradient(to right, transparent, $black 5px, $black 80%, transparent);
-    button {
+    a {
       border-radius: 50%;
       border: none;
       @include flex(row, center, center);
@@ -35,10 +35,13 @@
       margin-right: 2.5rem;
       svg {
         color: $blue;
-        cursor: not-allowed;
+        // cursor: not-allowed;
       }
       &:hover {
         opacity: 0.7;
+      }
+      &:active {
+        transform: scale(0.9);
       }
     }
     .container {

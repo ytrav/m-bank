@@ -23,3 +23,11 @@
   font-size: 0.9rem;
   padding: 15px;
 }
+
+.warn {
+  background-color: rgba($color: #ffcc00, $alpha: 0.1);
+  border: 1px solid rgba($color: #ffcc00, $alpha: 0.5);
+  color: $white;
+  font-size: 0.9rem;
+  padding: 15px;
+}

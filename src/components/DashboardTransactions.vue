@@ -32,27 +32,6 @@ export default defineComponent({
     getType(personal_type: 'subtraction' | 'addition'): boolean {
       return personal_type === 'addition'
     },
-    formattedTimestamp(timestamp: string): string {
-      const date = new Date(timestamp)
-      const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
-      let interval = Math.floor(seconds / 31536000)
-
-      if (interval >= 1) return interval + ' year' + (interval > 1 ? 's' : '') + ' ago'
-
-      interval = Math.floor(seconds / 2592000)
-      if (interval >= 1) return interval + ' month' + (interval > 1 ? 's' : '') + ' ago'
-
-      interval = Math.floor(seconds / 86400)
-      if (interval >= 1) return interval + ' day' + (interval > 1 ? 's' : '') + ' ago'
-
-      interval = Math.floor(seconds / 3600)
-      if (interval >= 1) return interval + ' hour' + (interval > 1 ? 's' : '') + ' ago'
-
-      interval = Math.floor(seconds / 60)
-      if (interval >= 1) return interval + ' minute' + (interval > 1 ? 's' : '') + ' ago'
-
-      return 'just now'
-    },
   },
 })
 </script>
@@ -71,7 +50,7 @@ export default defineComponent({
       class="transaction"
       v-for="(transaction, index) in userStore.user?.transactions"
       :key="index"
-      :title="formattedTimestamp(transaction.timestamp)"
+      :title="userStore.formatTimestampAgo(transaction.timestamp)"
     >
       <div class="icon">
         <SvgIcon type="mdi" :size="35" :path="icons.mdiBankTransfer" />
@@ -81,7 +60,7 @@ export default defineComponent({
           >Direct transfer
           <caption>
             {{
-              formattedTimestamp(transaction.timestamp)
+              userStore.formatTimestampAgo(transaction.timestamp)
             }}
           </caption></span
         >

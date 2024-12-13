@@ -14,6 +14,7 @@ import './style/home.scss'
 import './style/auth.scss'
 import './style/dashboard.scss'
 import './style/transaction.scss'
+import './style/cardissue.scss'
 
 import './style/viewports.scss'
 

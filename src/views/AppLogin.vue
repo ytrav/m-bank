@@ -1,6 +1,6 @@
 <script lang="ts">
-import axios from 'axios'
-import { useUserStore } from '@/stores/userStore'
+import axios, { type AxiosResponse } from 'axios'
+import { useUserStore, type User } from '@/stores/userStore'
 import { defineComponent } from 'vue'
 
 import AppWarning from '@/components/AppWarning.vue'
@@ -77,11 +77,12 @@ export default defineComponent({
             withCredentials: true,
           },
         )
-        .then((response) => {
+        .then((response: AxiosResponse<{ accessToken: string; user: User }>) => {
           console.log('Login response', response)
           this.userStore.setLoggedIn(true)
           // console.log(response.data.userData);
           this.userStore.setUserData(response.data.user)
+          this.userStore.setAccessToken(response.data.accessToken)
           // sessionStorage.setItem('token', response.data.token)
           this.$router.replace('/dashboard')
         })

@@ -116,6 +116,10 @@ export default defineComponent({
             {{
               formattedDateTime
             }}
+            -
+            {{
+              userStore.formatTimestampAgo(transaction.timestamp)
+            }}
           </caption>
           <span class="sender-receiver">
             <template v-if="transaction.personal_type === 'addition'"

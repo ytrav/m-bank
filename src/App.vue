@@ -58,6 +58,7 @@ export default {
           .then((userResponse) => {
             console.log('User data: ', userResponse.data.data)
             this.userStore.setUserData(userResponse.data.data)
+            this.userStore.setAccessToken(accessToken)
             this.userStore.setLoggedIn(true)
             // this.refreshInterval = setInterval(this.userStore.refreshData, 60000)
             this.userStore.startInterval()

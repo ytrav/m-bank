@@ -68,11 +68,20 @@ export default defineComponent({
 
       receiver = receiver.replace(/[^0-9]/g, '')
       axios
-        .post('https://bank-api.maevetopia.fun/transfer', {
-          sender: this.userStore.user?.account_number,
-          receiver: receiver,
-          amount: this.transferData.amount,
-        })
+        .post(
+          'https://bank-api.maevetopia.fun/transfer',
+          {
+            sender: this.userStore.user?.account_number,
+            receiver: receiver,
+            amount: this.transferData.amount,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${this.userStore.accessToken}`,
+            },
+            withCredentials: true,
+          },
+        )
         .then((response) => {
           console.log('Transfer response', response)
           this.userStore.refreshData()

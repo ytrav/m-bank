@@ -70,38 +70,26 @@ const routes: RouteRecordRaw[] = [
     component: Dashboard,
     children: [
       {
-        path: '/dashboard/transfer',
+        path: 'transfer',
         name: 'transfer',
         component: Transfer,
       },
       {
-        path: '/dashboard/transaction/:id',
+        path: 'transaction/:id',
         name: 'transaction',
         component: TransactionView,
       },
       {
-        path: '/dashboard/issue-card',
+        path: 'issue-card',
         name: 'issue-card',
         component: IssueCard,
       },
       {
-        path: '/dashboard/welcome',
+        path: 'welcome',
         name: 'welcome',
         component: Welcome,
       },
     ],
-    // beforeEnter: (
-    //   to: RouteLocationNormalized,
-    //   from: RouteLocationNormalized,
-    //   next: NavigationGuardNext,
-    // ) => {
-    //   const userStore = useUserStore()
-    //   if (userStore.loggedIn || sessionStorage.getItem('token')) {
-    //     next()
-    //   } else {
-    //     next({ name: 'login' })
-    //   }
-    // },
   },
 ]
 

@@ -15,12 +15,17 @@
   .register {
     width: calc(100% - 2rem);
   }
-  .dashboard-router {
+  .dashboard .dashboard-router {
+    // justify-content: flex-end;
     .wrapper {
       width: 100vw;
       height: 100vh;
-      border-radius: 0;
+      // justify-self: flex-end;
+      border-radius: 15px 15px 0 0;
       gap: 3rem;
+      .text-wrapper {
+        max-height: 100% !important;
+      }
     }
   }
 }

@@ -23,10 +23,10 @@ export interface UserData extends AxiosResponse {
 }
 
 export interface Card {
-  expiry_date: string
+  expiry_date: string | null
   formatted_expiry_date: Date
   formatted_expiry_date_string: string
-  number: string
+  number: string | null
 }
 
 export interface Transaction {
@@ -44,6 +44,7 @@ export interface UserStore {
   user: User | null
   refreshInterval: ReturnType<typeof setInterval> | null
   userMenuOpen: boolean
+  accessToken: string | null
 }
 
 type FormatExpiryDateArgs =
@@ -68,6 +69,7 @@ export const useUserStore = defineStore('user', {
     user: null,
     refreshInterval: null,
     userMenuOpen: false,
+    accessToken: null,
   }),
   actions: {
     setLoggedIn(loggedIn: boolean): void {
@@ -81,6 +83,9 @@ export const useUserStore = defineStore('user', {
         this.user.card.expiry_date,
         'string',
       )
+    },
+    setAccessToken(token: string): void {
+      this.accessToken = token
     },
     logout(): void {
       axios
@@ -129,29 +134,87 @@ export const useUserStore = defineStore('user', {
         return '' as FormatExpiryDateReturnType<T>
       }
     },
-    refreshData(): void {
-      axios
-        .post<{ accessToken: string }>(
-          'https://bank-api.maevetopia.fun/refresh',
-          {},
-          { withCredentials: true },
-        )
-        .then((refreshResponse: AxiosResponse<{ accessToken: string }>) => {
-          const newAccessToken = refreshResponse.data.accessToken
+    formatTimestampAgo(timestamp: string): string {
+      const date = new Date(timestamp)
+      const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000)
+      let interval = Math.floor(seconds / 31536000)
 
-          return axios.get<UserData>('https://bank-api.maevetopia.fun/user', {
+      if (interval >= 1) return interval + ' year' + (interval > 1 ? 's' : '') + ' ago'
+
+      interval = Math.floor(seconds / 2592000)
+      if (interval >= 1) return interval + ' month' + (interval > 1 ? 's' : '') + ' ago'
+
+      interval = Math.floor(seconds / 86400)
+      if (interval >= 1) return interval + ' day' + (interval > 1 ? 's' : '') + ' ago'
+
+      interval = Math.floor(seconds / 3600)
+      if (interval >= 1) return interval + ' hour' + (interval > 1 ? 's' : '') + ' ago'
+
+      interval = Math.floor(seconds / 60)
+      if (interval >= 1) return interval + ' minute' + (interval > 1 ? 's' : '') + ' ago'
+
+      return 'just now'
+    },
+    refreshData(): void {
+      if (!this.accessToken) {
+        axios
+          .post<{ accessToken: string }>(
+            'https://bank-api.maevetopia.fun/refresh',
+            {},
+            { withCredentials: true },
+          )
+          .then((refreshResponse: AxiosResponse<{ accessToken: string }>) => {
+            const newAccessToken = refreshResponse.data.accessToken
+
+            return axios.get<UserData>('https://bank-api.maevetopia.fun/user', {
+              headers: {
+                Authorization: `Bearer ${newAccessToken}`,
+              },
+            })
+          })
+          .then((userResponse: AxiosResponse<{ data: User }>) => {
+            this.setUserData(userResponse.data.data)
+          })
+          .catch((error: AxiosError) => {
+            console.error('Error refreshing data:', error.response?.data || error.message)
+            this.logout()
+          })
+      } else {
+        axios
+          .get<UserData>('https://bank-api.maevetopia.fun/user', {
             headers: {
-              Authorization: `Bearer ${newAccessToken}`,
+              Authorization: `Bearer ${this.accessToken}`,
             },
           })
-        })
-        .then((userResponse: AxiosResponse<{ data: User }>) => {
-          this.setUserData(userResponse.data.data)
-        })
-        .catch((error: AxiosError) => {
-          console.error('Error refreshing data:', error.response?.data || error.message)
-          this.logout()
-        })
+          .then((userResponse: AxiosResponse<{ data: User }>) => {
+            this.setUserData(userResponse.data.data)
+          })
+          .catch((error: AxiosError) => {
+            console.error('Error refreshing data:', error.response?.data || error.message)
+            axios
+              .post<{ accessToken: string }>(
+                'https://bank-api.maevetopia.fun/refresh',
+                {},
+                { withCredentials: true },
+              )
+              .then((refreshResponse: AxiosResponse<{ accessToken: string }>) => {
+                const newAccessToken = refreshResponse.data.accessToken
+
+                return axios.get<UserData>('https://bank-api.maevetopia.fun/user', {
+                  headers: {
+                    Authorization: `Bearer ${newAccessToken}`,
+                  },
+                })
+              })
+              .then((userResponse: AxiosResponse<{ data: User }>) => {
+                this.setUserData(userResponse.data.data)
+              })
+              .catch((error: AxiosError) => {
+                console.error('Error refreshing data:', error.response?.data || error.message)
+                this.logout()
+              })
+          })
+      }
     },
     setUserMenu(value: boolean): void {
       this.userMenuOpen = value

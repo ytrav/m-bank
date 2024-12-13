@@ -77,6 +77,8 @@ export default defineComponent({
         <span>mvBank</span>
       </div>
     </div>
-    <button><SvgIcon type="mdi" :path="plusIcon" :size="50" /></button>
+    <RouterLink to="/dashboard/issue-card"
+      ><SvgIcon type="mdi" :path="plusIcon" :size="50"
+    /></RouterLink>
   </div>
 </template>
