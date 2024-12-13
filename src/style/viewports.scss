@@ -40,6 +40,23 @@
       .wrapper .body {
         justify-content: space-between;
         flex: 2;
+        .text-wrapper {
+          padding-bottom: 2rem;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .dashboard .dashboard-router {
+    &.card-issue {
+      .wrapper .body {
+        // background-color: red;
+        max-height: calc(100vh - 8rem);
+        .text-wrapper {
+          padding-bottom: 4rem;
+        }
       }
     }
   }

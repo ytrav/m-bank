@@ -60,6 +60,7 @@ export default defineComponent({
         this.error = 'Insufficient funds for the transaction'
         return
       }
+      this.userStore.load('start')
       let receiver = this.transferData.receiver
 
       if (receiver.startsWith('12-')) {
@@ -82,12 +83,14 @@ export default defineComponent({
             withCredentials: true,
           },
         )
-        .then((response) => {
-          console.log('Transfer response', response)
+        .then(() => {
+          // console.log('Transfer response', response)
           this.userStore.refreshData()
+          this.userStore.load('end')
           this.$router.push('/dashboard')
         })
         .catch((error) => {
+          this.userStore.load('end')
           console.error('Transfer error', error)
           this.error = error.response.data.error
         })

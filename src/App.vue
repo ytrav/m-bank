@@ -38,6 +38,7 @@ export default {
     },
   },
   mounted() {
+    this.userStore.load('start')
     axios
       .post(
         'https://bank-api.maevetopia.fun/refresh',
@@ -60,6 +61,7 @@ export default {
             this.userStore.setUserData(userResponse.data.data)
             this.userStore.setAccessToken(accessToken)
             this.userStore.setLoggedIn(true)
+            this.userStore.load('end')
             // this.refreshInterval = setInterval(this.userStore.refreshData, 60000)
             this.userStore.startInterval()
 
@@ -72,12 +74,14 @@ export default {
             }
           })
           .catch(() => {
+            this.userStore.load('end')
             this.userStore.redirect()
             clearInterval(this.refreshInterval)
             // console.error(`Error fetching user data: ${error.response?.data || error.message}`)
           })
       })
       .catch(() => {
+        this.userStore.load('end')
         this.userStore.redirect()
         // console.error(`Error refreshing token: ${error.response?.data || error.message}`)
       })
@@ -100,4 +104,9 @@ export default {
       </Transition>
     </RouterView>
   </div>
+  <Transition name="loading">
+    <div v-if="userStore.isLoading" class="loading">
+      <span class="loader"></span>
+    </div>
+  </Transition>
 </template>

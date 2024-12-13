@@ -44,6 +44,7 @@ export interface UserStore {
   user: User | null
   refreshInterval: ReturnType<typeof setInterval> | null
   userMenuOpen: boolean
+  isLoading: boolean
   accessToken: string | null
 }
 
@@ -69,6 +70,7 @@ export const useUserStore = defineStore('user', {
     user: null,
     refreshInterval: null,
     userMenuOpen: false,
+    isLoading: false,
     accessToken: null,
   }),
   actions: {
@@ -87,10 +89,15 @@ export const useUserStore = defineStore('user', {
     setAccessToken(token: string): void {
       this.accessToken = token
     },
+    load(status: 'start' | 'end'): void {
+      this.isLoading = status === 'start'
+    },
     logout(): void {
+      this.load('start')
       axios
         .post('https://bank-api.maevetopia.fun/logout', {}, { withCredentials: true })
         .then(() => {
+          this.load('end')
           this.user = null
           this.loggedIn = false
           this.stopInterval()
@@ -156,6 +163,7 @@ export const useUserStore = defineStore('user', {
       return 'just now'
     },
     refreshData(): void {
+      this.load('start')
       if (!this.accessToken) {
         axios
           .post<{ accessToken: string }>(
@@ -174,12 +182,15 @@ export const useUserStore = defineStore('user', {
           })
           .then((userResponse: AxiosResponse<{ data: User }>) => {
             this.setUserData(userResponse.data.data)
+            this.load('end')
           })
           .catch((error: AxiosError) => {
+            this.load('end')
             console.error('Error refreshing data:', error.response?.data || error.message)
             this.logout()
           })
       } else {
+        this.load('start')
         axios
           .get<UserData>('https://bank-api.maevetopia.fun/user', {
             headers: {
@@ -208,8 +219,10 @@ export const useUserStore = defineStore('user', {
               })
               .then((userResponse: AxiosResponse<{ data: User }>) => {
                 this.setUserData(userResponse.data.data)
+                this.load('end')
               })
               .catch((error: AxiosError) => {
+                this.load('end')
                 console.error('Error refreshing data:', error.response?.data || error.message)
                 this.logout()
               })

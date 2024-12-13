@@ -64,6 +64,7 @@ export default defineComponent({
   },
   methods: {
     login(): void {
+      this.userStore.load('start')
       // console.log('Login', this.accountNum, this.password);
       axios
         .post(
@@ -78,8 +79,9 @@ export default defineComponent({
           },
         )
         .then((response: AxiosResponse<{ accessToken: string; user: User }>) => {
-          console.log('Login response', response)
+          // console.log('Login response', response)
           this.userStore.setLoggedIn(true)
+          this.userStore.load('end')
           // console.log(response.data.userData);
           this.userStore.setUserData(response.data.user)
           this.userStore.setAccessToken(response.data.accessToken)
@@ -87,6 +89,7 @@ export default defineComponent({
           this.$router.replace('/dashboard')
         })
         .catch((error) => {
+          this.userStore.load('end')
           console.error('Login error', error)
           this.error = error.response?.data?.error || 'Unexpected error occurred'
         })

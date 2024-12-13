@@ -24,6 +24,7 @@ export default defineComponent({
   },
   data(): {
     error: string
+    passwordCheck: boolean
     registerData: RegisterData
     userStore: ReturnType<typeof useUserStore>
     registerFields: Array<{
@@ -42,6 +43,7 @@ export default defineComponent({
   } {
     return {
       error: '',
+      passwordCheck: false,
       registerData: {
         inviteCode: '',
         password: '',
@@ -115,6 +117,10 @@ export default defineComponent({
   // },
   methods: {
     register(): void {
+      if (!this.passwordCheck) {
+        return
+      }
+      this.userStore.load('start')
       axios
         .post(
           'https://bank-api.maevetopia.fun/register',
@@ -131,12 +137,14 @@ export default defineComponent({
           },
         )
         .then((userResponse: AxiosResponse<{ user: User }>) => {
-          console.log('Register response', userResponse)
+          // console.log('Register response', userResponse)
           this.userStore.setLoggedIn(true)
+          this.userStore.load('end')
           this.userStore.setUserData(userResponse.data.user)
           this.$router.replace('/dashboard/welcome')
         })
         .catch((error: AxiosError<{ error: string }>) => {
+          this.userStore.load('end')
           console.error('Register error', error)
           this.error = error.response?.data?.error || error.message || 'Unexpected error occurred'
         })
@@ -160,6 +168,11 @@ export default defineComponent({
       // doesn't include illegal characters and spaces except for usual special characters
       if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/.test(password)) {
         requirements.push('Does not include unsupported characters')
+      }
+      if (requirements.length === 0) {
+        this.passwordCheck = true
+      } else {
+        this.passwordCheck = false
       }
       this.error =
         requirements.length > 0

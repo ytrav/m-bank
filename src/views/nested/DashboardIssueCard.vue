@@ -57,6 +57,7 @@ export default defineComponent({
   },
   methods: {
     issueCard(): void {
+      this.userStore.load('start')
       axios
         .post(
           'https://bank-api.maevetopia.fun/issue-card',
@@ -72,8 +73,10 @@ export default defineComponent({
           // const cardResponse = response
           this.newCard = cardResponse.data.card
           this.userStore.refreshData()
+          this.userStore.load('end')
         })
         .catch((error: AxiosError) => {
+          this.userStore.load('end')
           this.error = 'An error occurred while issuing the card'
           console.error(error)
         })
