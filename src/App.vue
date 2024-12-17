@@ -63,7 +63,7 @@ export default {
             this.userStore.setLoggedIn(true)
             this.userStore.load('end')
             // this.refreshInterval = setInterval(this.userStore.refreshData, 60000)
-            this.userStore.startInterval()
+            // this.userStore.startInterval()
 
             if (
               this.$route.path === '/' ||
